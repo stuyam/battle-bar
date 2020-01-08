@@ -1,0 +1,174 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title></title>
+</head>
+<body>
+  <script type="text/javascript">
+    String.prototype.splice = function(idx, rem, str) {
+      return this.slice(0, idx) + str + this.slice(idx + Math.abs(rem));
+    }
+
+    function updateURL(url) {
+      window.history.replaceState(null, document.title, '#'+url)
+    }
+
+    document.addEventListener('keydown', function(event) {
+      event.preventDefault();
+      const key = event.key;
+      switch (key) {
+        case ' ':
+          fireMissile(ship.position, ship.direction)
+          break
+        case 's':
+          shield()
+          break
+        case 'ArrowLeft':
+          move(-1)
+          break
+        case 'ArrowRight':
+          move(1)
+          break
+      }
+    })
+
+    document.addEventListener('keyup', function(event) {
+      event.preventDefault();
+      const key = event.key;
+      switch (key) {
+        case ' ':
+          canFire = true
+          break
+      }
+    })
+
+    var backdrop = '_'.repeat(150)
+    var ship = {
+      position: 25,
+      direction: 1,
+      shieldOn: false
+    }
+    var missiles = []
+    var enemies = []
+    var enemyFrequency = .025
+    var canFire = true
+    var game = ''
+
+    function move(value) {
+      ship.position += value
+      ship.direction = value
+    }
+
+    function shield() {
+      ship.shieldOn = !ship.shieldOn
+    }
+
+    function shipCharacter() {
+      if (ship.shieldOn) {
+        if (ship.direction > 0) {
+          return ')'
+        } else if (ship.direction < 0) {
+          return '('
+        }
+      } else {
+        if (ship.direction > 0) {
+          return '>'
+        } else if (ship.direction < 0) {
+          return '<'
+        }
+      }
+    }
+
+    function moveMissiles(value) {
+      var calcMissile
+      missiles = missiles.map(function(missile) {
+        calcMissile = missile.position + missile.speed
+        if (calcMissile < 0 || calcMissile > backdrop.length) {
+          return null
+        }
+        return {
+          position: calcMissile,
+          speed: missile.speed
+        }
+      }).filter(function(el) {
+        return el != null
+      })
+    }
+
+    function moveEnemy(value) {
+      var calcEnemy
+      enemies = enemies.map(function(enemy) {
+        calcEnemy = enemy.position + enemy.speed
+        if (calcEnemy < 0 || calcEnemy > backdrop.length) {
+          return null
+        }
+        var hitIndex = missileHit(enemy.position)
+        if (hitIndex !== false) {
+          missiles.splice(hitIndex, 1)
+          return null
+        }
+        return {
+          position: calcEnemy,
+          speed: enemy.speed
+        }
+      }).filter(function(el) {
+        return el != null
+      })
+    }
+
+    function missileHit(position) {
+      for (let i = 0; i < missiles.length; ++i) {
+        if (
+          (ship.position < position && missiles[i].position > ship.position && missiles[i].position >= position) ||
+          (ship.position > position && missiles[i].position < ship.position && missiles[i].position <= position)
+        ) {
+          return i
+        }
+      }
+      return false
+    }
+
+    function generateEnemy() {
+      if (Math.random() < enemyFrequency) {
+        var position = Math.random() > .5 ? 0 : backdrop.length
+        enemies.push({position: position, speed: position > 0 ? -1 : 1})
+      }
+    }
+
+    function fireMissile(position, speed) {
+      if (ship.shieldOn === false  && canFire) {
+        missiles.push({position: position, speed: speed})
+        canFire = false
+      }
+    }
+
+    function draw() {
+      // backdrop
+      game = backdrop
+
+      // ship
+      game = game.splice(ship.position, 1, shipCharacter())
+
+      // missiles
+      missiles.forEach(function(missile) {
+        game = game.splice(missile.position, 1, '·')
+      })
+
+      // enemies
+      enemies.forEach(function(enemy) {
+        game = game.splice(enemy.position, 1, '¥')
+      })
+
+      updateURL(game)
+      generateEnemy()
+      moveMissiles()
+      moveEnemy()
+      enemyFrequency += .001
+      setTimeout(draw, 100)
+    }
+
+    draw()
+  </script>
+</body>
+</html>
