@@ -13,7 +13,8 @@ var canFire = true
 var cratesCollected = 0
 var enemiesKilled = 0
 var game = ''
-var staticText = '_'.repeat(50) + 'PRESS_SPACE_TO_START' + '_'.repeat(50)
+var isGameOver = false
+var staticText = '_'.repeat(60) + 'PRESS_SPACE_TO_START' + '_'.repeat(60)
 
 function move(value) {
   ship.position += value
@@ -131,7 +132,8 @@ function checkCrates() {
 }
 
 function gameOver() {
-  staticText = '_'.repeat(50) + 'GAME_OVER' + '_'.repeat(50)
+  staticText = '_'.repeat(65) + 'GAME_OVER' + '_'.repeat(65)
+  isGameOver = true
 }
 
 function draw() {
@@ -154,7 +156,7 @@ function draw() {
 
     // enemies
     enemies.forEach(function(enemy) {
-      game = game.splice(enemy.position, 1, '¥')
+      game = game.splice(enemy.position, 1, 'ï')
     })
 
     updateURL(game)
@@ -169,7 +171,11 @@ function draw() {
     updateURL(staticText)
   }
 
-  setTimeout(draw, 100)
+  if (isGameOver === false) {
+    setTimeout(draw, 100)
+  } else {
+    updateURL(staticText)
+  }
 }
 
 draw()
