@@ -9,8 +9,8 @@ document.addEventListener('keydown', function(event) {
         staticText = null
       }
       break
-    case 's':
-      shield()
+    case 'r':
+      window.location.reload()
       break
     case 'ArrowLeft':
       move(-1)

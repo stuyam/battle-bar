@@ -1,8 +1,7 @@
 var backdrop = '_'.repeat(150)
 var ship = {
   position: 74,
-  direction: 1,
-  shieldOn: false
+  direction: 1
 }
 var missiles = []
 var enemies = []
@@ -21,23 +20,11 @@ function move(value) {
   ship.direction = value
 }
 
-function shield() {
-  ship.shieldOn = !ship.shieldOn
-}
-
 function shipCharacter() {
-  if (ship.shieldOn) {
-    if (ship.direction > 0) {
-      return ')'
-    } else if (ship.direction < 0) {
-      return '('
-    }
-  } else {
-    if (ship.direction > 0) {
-      return '>'
-    } else if (ship.direction < 0) {
-      return '<'
-    }
+  if (ship.direction > 0) {
+    return '>'
+  } else if (ship.direction < 0) {
+    return '<'
   }
 }
 
@@ -106,7 +93,7 @@ function generateCrate() {
 }
 
 function fireMissile(position, speed) {
-  if (ship.shieldOn === false  && canFire) {
+  if (canFire) {
     missiles.push({position: position, speed: speed})
     canFire = false
   }
@@ -132,7 +119,7 @@ function checkCrates() {
 }
 
 function gameOver() {
-  staticText = '_'.repeat(65) + 'GAME_OVER' + '_'.repeat(65)
+  staticText = '_'.repeat(45) + 'GAME_OVER___________hit_R_to_play_again' + '_'.repeat(45)
   isGameOver = true
 }
 
