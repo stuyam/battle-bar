@@ -109,7 +109,7 @@ function checkLife() {
 
 function checkCrates() {
   for (let i = 0; i < crates.length; ++i) {
-    if (ship.position === crates[i].position) {
+    if (ship.position === crates[i].position || (ship.position === crates[i].position - 1 && ship.direction < 1) || (ship.position === crates[i].position + 1 && ship.direction > 1)) {
       crates.splice(i, 1)
       cratesCollected++
       document.getElementById('cratesCollected').innerHTML = cratesCollected
@@ -159,7 +159,7 @@ function draw() {
   }
 
   if (isGameOver === false) {
-    setTimeout(draw, 100)
+    setTimeout(draw, 80)
   } else {
     updateURL(staticText)
   }
