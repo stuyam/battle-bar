@@ -130,7 +130,7 @@ function draw() {
 
     // missiles
     missiles.forEach(function(missile) {
-      game = game.splice(missile.position, 1, '~')
+      game = game.splice(missile.position, 1, '·')
     })
 
     // ship
@@ -143,7 +143,7 @@ function draw() {
 
     // enemies
     enemies.forEach(function(enemy) {
-      game = game.splice(enemy.position, 1, 'ï')
+      game = game.splice(enemy.position, 1, '¥')
     })
 
     updateURL(game)
