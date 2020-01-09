@@ -1,6 +1,6 @@
 var backdrop = '_'.repeat(150)
 var ship = {
-  position: 50,
+  position: 74,
   direction: 1,
   shieldOn: false
 }
